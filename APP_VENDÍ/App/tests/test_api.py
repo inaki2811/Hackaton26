@@ -40,6 +40,23 @@ def test_demo_frontend_is_served_from_api(tmp_path):
     assert "@media" in stylesheet.text
 
 
+def test_cors_origins_can_be_configured(monkeypatch, tmp_path):
+    monkeypatch.setenv("CORS_ORIGINS", "https://app.example.com, https://admin.example.com")
+    app = create_app(f"sqlite:///{tmp_path / 'test.db'}")
+
+    with TestClient(app) as client:
+        response = client.options(
+            "/health",
+            headers={
+                "Origin": "https://app.example.com",
+                "Access-Control-Request-Method": "GET",
+            },
+        )
+
+    assert response.status_code == 200
+    assert response.headers["access-control-allow-origin"] == "https://app.example.com"
+
+
 def test_sale_updates_inventory_and_analytics(client):
     business_id = create_business(client)
     product_response = client.post(

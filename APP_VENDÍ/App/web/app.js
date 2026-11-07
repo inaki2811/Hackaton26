@@ -1,4 +1,6 @@
-const API_URL = "";
+const API_URL = document.querySelector('meta[name="vendi-api-url"]')?.content
+  .trim()
+  .replace(/\/+$/, "") || "";
 const BUSINESS_KEY = "vendi.business.id";
 const BUSINESS_NAME_KEY = "vendi.business.name";
 const $ = (selector) => document.querySelector(selector);

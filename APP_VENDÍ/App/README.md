@@ -18,7 +18,17 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-Abre `http://127.0.0.1:8000` para la interfaz de la demo. La documentación interactiva está en `/docs` y la comprobación de salud en `/health`. No se necesita Node.js ni un servidor frontend aparte. La base local se crea en `vendi.db`. Para cambiarla, configura `DATABASE_URL`, por ejemplo `sqlite:///./vendi.db` o una URL de PostgreSQL.
+Abre `http://127.0.0.1:8000` para la interfaz CSR de la demo: el navegador muestra las vistas y consulta los datos a la API REST. La documentación interactiva está en `/docs` y la comprobación de salud en `/health`. No se necesita Node.js ni un servidor frontend aparte para esta modalidad. La base local se crea en `vendi.db`. Para cambiarla, configura `DATABASE_URL`, por ejemplo `sqlite:///./vendi.db` o una URL de PostgreSQL.
+
+### Desplegar el frontend por separado
+
+La carpeta `web/` es estática y puede servirse desde un hosting de frontend. Antes de desplegarla, establece el contenido de `meta[name="vendi-api-url"]` en `web/index.html` a la URL pública de la API (por ejemplo, `https://api.ejemplo.com`), sin una ruta final. En el servidor de la API configura `CORS_ORIGINS` con el origen exacto del frontend; admite varios orígenes separados por comas:
+
+```bash
+export CORS_ORIGINS="https://app.ejemplo.com,https://www.ejemplo.com"
+```
+
+Si `vendi-api-url` se deja vacío, el frontend usa el mismo origen, como en la ejecución local de arriba.
 
 Al entrar por primera vez, crea un espacio para el negocio. Su identificador se guarda en el navegador para la demo. El botón **Cargar datos de ejemplo** registra productos, ventas y un gasto reales en la API para que puedas explorar el reporte; úsalo una sola vez por espacio.
 
